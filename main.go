@@ -156,6 +156,26 @@ func outputResults(w http.ResponseWriter, results *[]Result) {
 	tbl.Print()
 }
 
+func helpHandler() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+        headerFmt := color.New(color.FgGreen, color.Underline).SprintfFunc()
+        columnFmt := color.New(color.FgYellow).SprintfFunc()
+
+        fmt.Fprintf(w, "nvim.sh - neovim plugin search from the terminal\n\n")
+
+        tbl := table.New("api", "description")
+		tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt).WithWriter(w)
+        tbl.AddRow("https://nvim.sh", "help")
+        tbl.AddRow("https://nvim.sh/s", "return all plugins in directory")
+        tbl.AddRow("https://nvim.sh/s/:search", "search for plugin within directory")
+        tbl.AddRow("https://nvim.sh/t", "list all tags within directory")
+        tbl.AddRow("https://nvim.sh/t/:search", "search for plugins that exactly match tag within directory")
+        tbl.Print()
+
+        fmt.Fprintf(w, "\npowered by: https://neovimcraft.com\n")
+    }
+}
+
 func searchTagsHandler(data *Data) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		search := strings.ToLower(ps.ByName("search"))
@@ -227,7 +247,8 @@ func main() {
 	go fetch(data)
 
 	router := httprouter.New()
-	router.GET("/", allHandler(data))
+	router.GET("/", helpHandler())
+	router.GET("/s", allHandler(data))
 	router.GET("/s/:search", searchHandler(data))
 	router.GET("/t", tagsHandler(data))
 	router.GET("/t/:search", searchTagsHandler(data))
