@@ -1,6 +1,6 @@
 # nvim.sh
 
-A simple web server that will return neovim plugins.
+neovim plugin directory search from the terminal
 
 ## Usage
 
@@ -19,7 +19,7 @@ curl https://nvim.sh/s
 Search for a plugin
 
 ```bash
-curl https://nvim.sh/s/coc
+curl https://nvim.sh/s/statusline
 ```
 
 List all tags
