@@ -86,6 +86,7 @@ func fetchData(data *Data) error {
 	if err != nil {
 		return err
 	}
+	log.Println("Fetched data successfully")
 
 	plugins := make([]Plugin, 0, len(db.Plugins))
 
