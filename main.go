@@ -263,6 +263,7 @@ func helpHandler() httprouter.Handle {
 
         fmt.Fprintf(w, "\npowered by: %s\n", credits[0])
         fmt.Fprintf(w, "source: %s\n", credits[1])
+        fmt.Fprintf(w, "created by: %s\n", credits[2])
     }
 }
 
