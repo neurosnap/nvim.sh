@@ -36,8 +36,31 @@ type Plugin struct {
 }
 
 type Result struct {
-	Plugin Plugin
-	Rank   int
+    Plugin Plugin `json:"plugin"`
+    Rank   int `json:"rank"`
+}
+
+type ResultCollection struct {
+    Results *[]Result `json:"results"`
+}
+
+type TagCollection struct {
+    Tags []string `json:"tags"`
+}
+
+type LinksCollection struct {
+    Help string `json:"help"`
+    Plugins string `json:"plugins"`
+    SearchPlugins string `json:"search_plugins"`
+    Tags string `json:"tags"`
+    TagsSearch string `json:"tags_search"`
+}
+
+type HomeCollection struct {
+    Title string `json:"title"`
+    Description string `json:"description"`
+    Credits []string `json:"credits"`
+    Links LinksCollection `json:"links"`
 }
 
 type Db struct {
@@ -148,31 +171,98 @@ func matchTags(search string, plugin Plugin) int {
 	return -1
 }
 
-func outputResults(w http.ResponseWriter, results *[]Result) {
+type Output int64
+
+const (
+    PLAIN Output = 0
+    JSON = 1
+    HTML = 2
+)
+
+func (o Output) String() string {
+	switch o {
+	case PLAIN:
+		return "plain"
+	case JSON:
+		return "json"
+    case HTML:
+        return "html"
+	}
+	return "unknown"
+}
+
+func sanitizeOutputFormat(str string) Output {
+    if str == "json" {
+        return JSON
+    }
+
+    if str == "html" {
+        return HTML
+    }
+
+    return PLAIN
+}
+
+func outputResults(w http.ResponseWriter, results *[]Result, o Output) {
 	sort.Sort(ByRank(*results))
 
-	tbl := printResults(*results, false)
-	tbl.WithWriter(w)
-	tbl.Print()
+    if o == JSON {
+        collection := ResultCollection{Results: results}
+        w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(collection)
+        return
+    }
+
+    tbl := printResults(*results, false)
+    tbl.WithWriter(w)
+    tbl.Print()
 }
 
 func helpHandler() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
         headerFmt := color.New(color.FgGreen, color.Underline).SprintfFunc()
         columnFmt := color.New(color.FgYellow).SprintfFunc()
+        format := sanitizeOutputFormat(r.URL.Query().Get("format"))
+        name := "nvim.sh"
+        desc := "neovim plugin search from the terminal"
+        url := "https://nvim.sh"
+        pluginsUrl := fmt.Sprintf("%s/s", url)
+        searchPluginsUrl := fmt.Sprintf("%s/s/:search", url)
+        tagsUrl := fmt.Sprintf("%s/t", url)
+        tagsSearchUrl := fmt.Sprintf("%s/t/:search", url)
+        credits := []string{"https://neovimcraft.com", "https://github.com/neurosnap/nvim.sh"}
+
+        if format == JSON {
+            collection := HomeCollection{
+                Title: name,
+                Description: desc,
+                Credits: credits,
+                Links: LinksCollection{
+                    Help: url,
+                    Plugins: pluginsUrl,
+                    SearchPlugins: searchPluginsUrl,
+                    Tags: tagsUrl,
+                    TagsSearch: tagsSearchUrl,
+                },
+            }
+            w.Header().Set("Content-Type", "application/json")
+            json.NewEncoder(w).Encode(collection)
+            return
+        }
 
         fmt.Fprintf(w, "nvim.sh - neovim plugin search from the terminal\n\n")
 
         tbl := table.New("api", "description")
 		tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt).WithWriter(w)
-        tbl.AddRow("https://nvim.sh", "help")
-        tbl.AddRow("https://nvim.sh/s", "return all plugins in directory")
-        tbl.AddRow("https://nvim.sh/s/:search", "search for plugin within directory")
-        tbl.AddRow("https://nvim.sh/t", "list all tags within directory")
-        tbl.AddRow("https://nvim.sh/t/:search", "search for plugins that exactly match tag within directory")
+        tbl.AddRow(url, "help")
+        tbl.AddRow(pluginsUrl, "return all plugins in directory")
+        tbl.AddRow(searchPluginsUrl, "search for plugin within directory")
+        tbl.AddRow(tagsUrl, "list all tags within directory")
+        tbl.AddRow(tagsSearchUrl, "search for plugins that exactly match tag within directory")
         tbl.Print()
 
-        fmt.Fprintf(w, "\npowered by: https://neovimcraft.com\n")
+        fmt.Fprintf(w, "\npowered by: %s\n", credits[0])
+        fmt.Fprintf(w, "source: %s\n", credits[1])
     }
 }
 
@@ -188,7 +278,8 @@ func searchTagsHandler(data *Data) httprouter.Handle {
 			}
 		}
 
-		outputResults(w, &results)
+        format := sanitizeOutputFormat(r.URL.Query().Get("format"))
+		outputResults(w, &results, format)
 	}
 }
 
@@ -200,7 +291,8 @@ func allHandler(data *Data) httprouter.Handle {
 			results = append(results, Result{Plugin: plugin, Rank: 0})
 		}
 
-		outputResults(w, &results)
+        format := sanitizeOutputFormat(r.URL.Query().Get("format"))
+		outputResults(w, &results, format)
 	}
 }
 
@@ -220,12 +312,25 @@ func searchHandler(data *Data) httprouter.Handle {
 			}
 		}
 
-		outputResults(w, &results)
+        format := sanitizeOutputFormat(r.URL.Query().Get("format"))
+		outputResults(w, &results, format)
 	}
 }
 
 func tagsHandler(data *Data) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+        format := sanitizeOutputFormat(r.URL.Query().Get("format"))
+        if format == JSON {
+            tags := make([]string, 0, len(data.Tags))
+            for k := range data.Tags {
+                tags = append(tags, k)
+            }
+            collection := TagCollection{Tags: tags}
+            w.Header().Set("Content-Type", "application/json")
+            json.NewEncoder(w).Encode(collection)
+            return
+        }
+
 		for key := range data.Tags {
 			fmt.Fprintf(w, "%s\n", key)
 		}
