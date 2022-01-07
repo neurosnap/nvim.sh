@@ -22,7 +22,7 @@ beauwilliams/statusline.lua   95     0           2021-09-28T00:25:30Z  A zero-co
 
 ## Usage
 
-Help response
+Help
 
 ```bash
 curl https://nvim.sh
@@ -52,9 +52,15 @@ Search for plugins based on tag
 curl https://nvim.sh/t/note-taking
 ```
 
+## Outputs
+
+JSON - all endpoints support `format` query param
+
+```bash
+https://nvim.sh/t/sidebar?format=json
+```
+
 ## Credits
 
-Powered by: 
  - https://neovimcraft.com 
- - https://github.com/neurosnap/neovimcraft
- - https://twitter.com/neurosnap
+ - https://erock.io
