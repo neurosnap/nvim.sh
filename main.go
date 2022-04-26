@@ -101,7 +101,7 @@ func fetchData(data *Data) error {
 	log.Println("Fetching neovimcraft data ...")
 
 	var db Db
-	resp, err := http.Get("https://storage.googleapis.com/neovimcraft.com/db.json")
+	resp, err := http.Get("https://storage.googleapis.com/neovimcraft.com/db.json/db.json")
 	if err != nil {
 		return err
 	}
