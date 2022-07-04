@@ -358,5 +358,5 @@ func main() {
 	router.GET("/s/:search", searchHandler(data))
 	router.GET("/t", tagsHandler(data))
 	router.GET("/t/:search", searchTagsHandler(data))
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
 }
