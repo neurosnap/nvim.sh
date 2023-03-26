@@ -1,10 +1,17 @@
+DOCKER_CMD?=podman
+REGISTRY?=registry.erock.io
+
+setup:
+	$(DOCKER_CMD) tag nvimsh $(REGISTRY)/nvimsh
+.PHONY: setup
+
 build:
-	docker build -t neurosnap/nvimsh .
+	$(DOCKER_CMD) build -t nvimsh .
 .PHONY: build
 
 push:
-	docker push neurosnap/nvimsh:latest
+	$(DOCKER_CMD) push $(REGISTRY)/nvimsh:latest
 .PHONY: push
 
-upload: build push
-.PHONY: upload
+bp: build push
+.PHONY: bp
