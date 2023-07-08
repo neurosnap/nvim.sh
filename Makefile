@@ -6,7 +6,7 @@ setup:
 .PHONY: setup
 
 build:
-	$(DOCKER_CMD) build -t nvimsh .
+	$(DOCKER_CMD) build -t $(REGISTRY)/nvimsh .
 .PHONY: build
 
 push:
