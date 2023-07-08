@@ -230,7 +230,7 @@ func helpHandler() httprouter.Handle {
 		searchPluginsUrl := fmt.Sprintf("%s/s/:search", url)
 		tagsUrl := fmt.Sprintf("%s/t", url)
 		tagsSearchUrl := fmt.Sprintf("%s/t/:search", url)
-		credits := []string{"https://neovimcraft.com", "https://github.com/neurosnap/nvim.sh", "https://erock.io"}
+		credits := []string{"https://neovimcraft.com", "https://github.com/neurosnap/nvim.sh", "https://bower.sh"}
 
 		if format == JSON {
 			collection := HomeCollection{
