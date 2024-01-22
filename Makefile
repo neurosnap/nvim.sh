@@ -1,4 +1,4 @@
-DOCKER_CMD?=podman
+DOCKER_CMD?=docker
 REGISTRY?=registry.erock.io
 
 setup:
