@@ -1,5 +1,5 @@
 DOCKER_CMD?=docker
-REGISTRY?=registry.erock.io
+REGISTRY?=local.imgs.sh:8443
 
 setup:
 	$(DOCKER_CMD) tag nvimsh $(REGISTRY)/nvimsh
