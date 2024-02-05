@@ -30,4 +30,4 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: localhost:5000/nvimsh:latest
+        tags: 0.0.0.0:5000/nvimsh:latest
