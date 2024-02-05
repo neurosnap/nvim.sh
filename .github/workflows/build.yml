@@ -18,7 +18,7 @@ jobs:
       shell: bash
       run: |
         echo -e "${{ secrets.PRIVATE_KEY }}" > ./keys/registry
-        chmod 600 key
+        chmod 600 ./keys/registry
     - name: Restart registry service container
       uses: docker://docker
       with:
