@@ -15,6 +15,12 @@ jobs:
           USERNAME: erock
         ports:
           - 8443:8443
+        options: >-
+          --health-cmd "curl -f http://localhost:8443/v2/nvimsh/tags/list"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 5
+          --health-start-period 30s
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
