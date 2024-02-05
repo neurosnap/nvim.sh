@@ -18,6 +18,7 @@ jobs:
         chmod 600 ./key
         export RUNNER_TRACKING_ID=""
         ssh -f -N -L 8443:localhost:80 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ./key erock@imgs.sh &
+        curl -v http://localhost:8443/v2/nvimsh/tags/list
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
