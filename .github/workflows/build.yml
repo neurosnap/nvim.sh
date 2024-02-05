@@ -16,7 +16,7 @@ jobs:
         ports:
           - 5000:5000
         options: >-
-          --health-cmd "curl -f http://0.0.0.0:5000/v2/nvimsh/tags/list"
+          --health-cmd "curl -f http://localhost:5000/v2/nvimsh/tags/list"
           --health-interval 30s
           --health-timeout 10s
           --health-retries 5
@@ -30,4 +30,4 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: 0.0.0.0:5000/nvimsh:latest
+        tags: localhost:5000/nvimsh:latest
