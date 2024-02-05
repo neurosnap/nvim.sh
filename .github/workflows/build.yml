@@ -29,5 +29,6 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
+        network: host
         push: true
         tags: localhost:5000/nvimsh:latest
