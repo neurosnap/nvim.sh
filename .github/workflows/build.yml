@@ -7,26 +7,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      registry:
-        image: neurosnap/ptun
-        volumes:
-          - ${{ github.workspace }}/keys:/keys
-        options: --name registry
     steps:
-    - name: Connect to registry
-      shell: bash
-      run: |
-        echo -e "${{ secrets.PRIVATE_KEY }}" > ./keys/registry
-        # chmod 600 ./registry
-    - name: Restart registry service container
-      uses: docker://docker
-      with:
-        args: docker restart registry
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
+    - name: Connect to imgs.sh
+      run: |
+        echo -e "${{ secrets.PRIVATE_KEY }}" > ./key
+        chmod 600 ./key
+        RUNNER_TRACKING_ID="" && ssh -f -N -L 0.0.0.0:8443:localhost:80 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ./key erock@imgs.sh
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
