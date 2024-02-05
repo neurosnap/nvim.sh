@@ -8,15 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Connect to imgs.sh
-      run: |
-        echo -e "${{ secrets.PRIVATE_KEY }}" >__TEMP_INPUT_KEY_FILE
-        chmod 600 __TEMP_INPUT_KEY_FILE
-        ssh -f -N -L 8443:localhost:80 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i __TEMP_INPUT_KEY_FILE erock@imgs.sh
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
+    - name: Connect to imgs.sh
+      run: |
+        echo -e "${{ secrets.PRIVATE_KEY }}" >__TEMP_INPUT_KEY_FILE
+        chmod 600 __TEMP_INPUT_KEY_FILE
+        ssh -f -N -L 0.0.0.0:8443:localhost:80 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i __TEMP_INPUT_KEY_FILE erock@imgs.sh
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
