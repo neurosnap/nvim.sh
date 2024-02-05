@@ -32,3 +32,4 @@ jobs:
         network: host
         push: true
         tags: localhost:5000/nvimsh:latest
+        driver-opts: network=host
