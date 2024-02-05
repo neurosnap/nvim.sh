@@ -24,4 +24,4 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: 0.0.0.0:8443/nvimsh:latest
+        tags: localhost:8443/nvimsh:latest
