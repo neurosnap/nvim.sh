@@ -7,18 +7,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      registry:
+        image: neurosnap/ptun:latest
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          USERNAME: erock
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    - name: Connect to imgs.sh
-      run: |
-        echo -e "${{ secrets.PRIVATE_KEY }}" > ./key
-        chmod 600 ./key
-        export RUNNER_TRACKING_ID=""
-        ssh -f -N -L 8443:localhost:80 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ./key erock@imgs.sh &
-        sleep 5 && curl -v http://localhost:8443/v2/nvimsh/tags/list
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
