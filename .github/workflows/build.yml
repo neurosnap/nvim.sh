@@ -11,14 +11,14 @@ jobs:
       registry:
         image: neurosnap/ptun
         volumes:
-          - ${{ github.workspace }}/keys:/keys
+          - ${{ github.workspace }}/key:/key
         options: --name registry
     steps:
     - name: Connect to registry
       shell: bash
       run: |
-        echo -e "${{ secrets.PRIVATE_KEY }}" > ./keys/registry
-        chmod 600 ./keys/registry
+        echo -e "${{ secrets.PRIVATE_KEY }}" > ./key
+        # chmod 600 ./key
     - name: Restart registry service container
       uses: docker://docker
       with:
