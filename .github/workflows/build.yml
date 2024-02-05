@@ -13,6 +13,8 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           USERNAME: erock
+        ports:
+          - 8443:8443
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
