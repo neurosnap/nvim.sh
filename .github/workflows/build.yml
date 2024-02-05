@@ -17,10 +17,10 @@ jobs:
           - 5000:5000
         options: >-
           --health-cmd "curl -f http://localhost:5000/v2/nvimsh/tags/list"
-          --health-interval 30s
-          --health-timeout 10s
+          --health-interval 5s
+          --health-timeout 5s
           --health-retries 5
-          --health-start-period 30s
+          --health-start-period 10s
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
