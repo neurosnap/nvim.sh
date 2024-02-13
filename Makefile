@@ -1,5 +1,5 @@
 DOCKER_CMD?=docker
-REGISTRY?=local.imgs.sh:8443
+REGISTRY?=localhost:5000
 
 setup:
 	$(DOCKER_CMD) tag nvimsh $(REGISTRY)/nvimsh
