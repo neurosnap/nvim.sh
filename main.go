@@ -344,7 +344,7 @@ func fetch(data *Data) {
 		if err != nil {
 			log.Println(err)
 		}
-		time.Sleep(1 * time.Hour)
+		time.Sleep(24 * time.Hour)
 	}
 }
 

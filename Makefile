@@ -1,5 +1,5 @@
 DOCKER_CMD?=docker
-REGISTRY?=localhost:5000
+REGISTRY?=localhost:1338
 
 setup:
 	$(DOCKER_CMD) tag nvimsh $(REGISTRY)/nvimsh
@@ -15,3 +15,7 @@ push:
 
 bp: build push
 .PHONY: bp
+
+fmt:
+	go fmt ./...
+.PHONY: fmt
