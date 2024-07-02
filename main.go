@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 	"time"
@@ -349,6 +350,12 @@ func fetch(data *Data) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("Defaulting to port %s", port)
+	}
+
 	data := NewData()
 	go fetch(data)
 
@@ -358,5 +365,6 @@ func main() {
 	router.GET("/s/:search", searchHandler(data))
 	router.GET("/t", tagsHandler(data))
 	router.GET("/t/:search", searchTagsHandler(data))
-	log.Fatal(http.ListenAndServe("0.0.0.0:80", router))
+	log.Printf("Listening on port %s", port)
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, router))
 }

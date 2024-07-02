@@ -1,0 +1,8 @@
+runtime: go122
+
+instance_class: F1
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always
